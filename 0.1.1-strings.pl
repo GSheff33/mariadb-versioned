@@ -1,19 +1,31 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use Getopt::Long;
+use DBI;
+use DateTime;
+use Net::SFTP::Foreign;
+use Config::Simple
 
-use DBI
+# We will load all the variables in with a config to 
 
 #MariaDB database config
-my $dsn="DBI:mysql:perlmysqldb";
-my $username = "repluser";
-my $password = "replpassword";
+Config::Simple->import_from(__FILENAME__,\%Config);
 
-# Database Repository config
-my $startv="" # starting version number
-my $endv="" # ending version number
-my $targetdb="" # target database to diff
-my $skipped="" # skipped tables, can be specified on a per table basis
+$cfg = new Config::Simple(__FILENAME__);
+
+# Config-related variables
+my $dbname	= $cfg->param('schema');
+my $dsn		= "dbi::MySQL:dbname=$dbname";
+my $user	= $cfg->param('username');
+my $pswd	= $cfg->param('password');
+
+
+# Database 
+my $startv=""; # starting version number
+my $endv=""; # ending version number
+my $targetdb=""; # target database to diff
+my $skipped=""; # skipped tables, can be specified on a per table basis
 
 
 # connect to MariaDB database
